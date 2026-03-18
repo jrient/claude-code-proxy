@@ -38,30 +38,30 @@ export default function StatsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Statistics</h2>
+        <h2 className="text-2xl font-bold text-gray-900">统计分析</h2>
         <div className="flex items-center gap-2">
           <select value={period} onChange={e => setPeriod(e.target.value)}
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option value="hour">Hourly</option>
-            <option value="day">Daily</option>
+            <option value="hour">按小时</option>
+            <option value="day">按天</option>
           </select>
           <select value={days} onChange={e => setDays(+e.target.value)}
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option value={1}>Last 24h</option>
-            <option value={7}>Last 7 days</option>
-            <option value={30}>Last 30 days</option>
+            <option value={1}>最近 24 小时</option>
+            <option value={7}>最近 7 天</option>
+            <option value={30}>最近 30 天</option>
           </select>
         </div>
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center h-64 text-gray-500">Loading...</div>
+        <div className="flex items-center justify-center h-64 text-gray-500">加载中...</div>
       ) : (
         <>
           {/* Charts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <h3 className="text-sm font-semibold text-gray-700 mb-4">Requests</h3>
+              <h3 className="text-sm font-semibold text-gray-700 mb-4">请求量</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={timeSeries}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -74,7 +74,7 @@ export default function StatsPage() {
             </div>
 
             <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <h3 className="text-sm font-semibold text-gray-700 mb-4">Errors</h3>
+              <h3 className="text-sm font-semibold text-gray-700 mb-4">错误数</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={timeSeries}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -90,7 +90,7 @@ export default function StatsPage() {
           {/* Model Stats */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <h3 className="text-sm font-semibold text-gray-700 mb-4">Usage by Model</h3>
+              <h3 className="text-sm font-semibold text-gray-700 mb-4">模型用量分布</h3>
               {modelStats.length > 0 ? (
                 <ResponsiveContainer width="100%" height={250}>
                   <PieChart>
@@ -101,34 +101,34 @@ export default function StatsPage() {
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="flex items-center justify-center h-[250px] text-gray-400 text-sm">No data</div>
+                <div className="flex items-center justify-center h-[250px] text-gray-400 text-sm">暂无数据</div>
               )}
             </div>
 
             <div className="bg-white rounded-xl border border-gray-200 p-5">
-              <h3 className="text-sm font-semibold text-gray-700 mb-4">Model Details</h3>
+              <h3 className="text-sm font-semibold text-gray-700 mb-4">模型详情</h3>
               <div className="overflow-auto max-h-[250px]">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-left text-xs text-gray-500 uppercase">
-                      <th className="pb-2">Model</th>
-                      <th className="pb-2 text-right">Requests</th>
-                      <th className="pb-2 text-right">Tokens</th>
-                      <th className="pb-2 text-right">Cost</th>
-                      <th className="pb-2 text-right">Latency</th>
+                    <tr className="text-left text-xs text-gray-500">
+                      <th className="pb-2">模型</th>
+                      <th className="pb-2 text-right">请求数</th>
+                      <th className="pb-2 text-right">Token 数</th>
+                      <th className="pb-2 text-right">费用</th>
+                      <th className="pb-2 text-right">延迟</th>
                     </tr>
                   </thead>
                   <tbody>
                     {modelStats.map((m, i) => (
                       <tr key={i} className="border-t border-gray-100">
-                        <td className="py-2 font-medium text-gray-700">{m.model || 'unknown'}</td>
+                        <td className="py-2 font-medium text-gray-700">{m.model || '未知'}</td>
                         <td className="py-2 text-right text-gray-600">{formatNumber(m.requests)}</td>
                         <td className="py-2 text-right text-gray-600">{formatNumber(m.prompt_tokens + m.completion_tokens)}</td>
                         <td className="py-2 text-right text-gray-600">{formatCost(m.estimated_cost)}</td>
                         <td className="py-2 text-right text-gray-600">{formatLatency(m.avg_latency)}</td>
                       </tr>
                     ))}
-                    {modelStats.length === 0 && <tr><td colSpan={5} className="py-8 text-center text-gray-400">No data</td></tr>}
+                    {modelStats.length === 0 && <tr><td colSpan={5} className="py-8 text-center text-gray-400">暂无数据</td></tr>}
                   </tbody>
                 </table>
               </div>
@@ -138,19 +138,19 @@ export default function StatsPage() {
           {/* Recent Logs */}
           <div className="bg-white rounded-xl border border-gray-200 p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-gray-700">Recent Requests</h3>
-              <span className="text-xs text-gray-500">{totalLogs} total</span>
+              <h3 className="text-sm font-semibold text-gray-700">最近请求</h3>
+              <span className="text-xs text-gray-500">共 {totalLogs} 条</span>
             </div>
             <div className="overflow-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-xs text-gray-500 uppercase border-b border-gray-200">
-                    <th className="pb-2 px-2">Model</th>
-                    <th className="pb-2 px-2 text-right">Input</th>
-                    <th className="pb-2 px-2 text-right">Output</th>
-                    <th className="pb-2 px-2 text-right">Latency</th>
-                    <th className="pb-2 px-2 text-center">Status</th>
-                    <th className="pb-2 px-2 text-center">Stream</th>
+                  <tr className="text-left text-xs text-gray-500 border-b border-gray-200">
+                    <th className="pb-2 px-2">模型</th>
+                    <th className="pb-2 px-2 text-right">输入</th>
+                    <th className="pb-2 px-2 text-right">输出</th>
+                    <th className="pb-2 px-2 text-right">延迟</th>
+                    <th className="pb-2 px-2 text-center">状态码</th>
+                    <th className="pb-2 px-2 text-center">类型</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -165,10 +165,10 @@ export default function StatsPage() {
                           {l.status_code || '-'}
                         </span>
                       </td>
-                      <td className="py-2 px-2 text-center text-gray-500">{l.stream ? 'SSE' : 'Sync'}</td>
+                      <td className="py-2 px-2 text-center text-gray-500">{l.stream ? '流式' : '同步'}</td>
                     </tr>
                   ))}
-                  {logs.length === 0 && <tr><td colSpan={6} className="py-8 text-center text-gray-400">No requests yet</td></tr>}
+                  {logs.length === 0 && <tr><td colSpan={6} className="py-8 text-center text-gray-400">暂无请求记录</td></tr>}
                 </tbody>
               </table>
             </div>

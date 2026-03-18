@@ -184,3 +184,20 @@ export const getRecentLogs = (limit = 50, offset = 0) =>
     }>
     total: number
   }>(`/stats/logs?limit=${limit}&offset=${offset}`)
+
+// Model Mappings
+export const getModelMappings = (providerId: number) =>
+  request<Array<{
+    id: number
+    source: string
+    target: string
+  }>>(`/providers/${providerId}/models`)
+
+export const createModelMapping = (providerId: number, source: string, target: string) =>
+  request<{ id: number }>(`/providers/${providerId}/models`, {
+    method: 'POST',
+    body: JSON.stringify({ source, target }),
+  })
+
+export const deleteModelMapping = (providerId: number, mappingId: number) =>
+  request(`/providers/${providerId}/models/${mappingId}`, { method: 'DELETE' })

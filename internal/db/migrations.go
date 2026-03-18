@@ -66,6 +66,14 @@ func (d *DB) migrate() error {
 			UNIQUE(hour, api_key_id, provider_id, model)
 		)`,
 		`CREATE INDEX IF NOT EXISTS idx_stats_hourly_hour ON stats_hourly(hour)`,
+		`CREATE TABLE IF NOT EXISTS model_mappings (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			provider_id INTEGER NOT NULL,
+			source_model TEXT NOT NULL,
+			target_model TEXT NOT NULL,
+			FOREIGN KEY (provider_id) REFERENCES providers(id) ON DELETE CASCADE,
+			UNIQUE(provider_id, source_model)
+		)`,
 	}
 
 	for i, m := range migrations {

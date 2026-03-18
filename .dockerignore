@@ -1,0 +1,9 @@
+web/node_modules
+web/dist
+cmd/server/dist
+data
+.git
+.omc
+.claude
+*.md
+claude-code-proxy

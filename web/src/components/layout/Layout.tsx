@@ -3,10 +3,10 @@ import { LayoutDashboard, Server, Key, BarChart3, LogOut } from 'lucide-react'
 import { clearToken } from '@/lib/api'
 
 const navItems = [
-  { to: '/', icon: LayoutDashboard, label: 'Dashboard', end: true },
-  { to: '/providers', icon: Server, label: 'Providers' },
-  { to: '/apikeys', icon: Key, label: 'API Keys' },
-  { to: '/stats', icon: BarChart3, label: 'Statistics' },
+  { to: '/', icon: LayoutDashboard, label: '仪表板', end: true },
+  { to: '/providers', icon: Server, label: 'API 源管理' },
+  { to: '/apikeys', icon: Key, label: 'API 密钥' },
+  { to: '/stats', icon: BarChart3, label: '统计分析' },
 ]
 
 export default function Layout() {
@@ -23,7 +23,7 @@ export default function Layout() {
       <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
         <div className="p-6 border-b border-gray-200">
           <h1 className="text-xl font-bold text-gray-900">Claude Code Proxy</h1>
-          <p className="text-xs text-gray-500 mt-1">Management Panel</p>
+          <p className="text-xs text-gray-500 mt-1">管理面板</p>
         </div>
 
         <nav className="flex-1 p-4 space-y-1">
@@ -52,7 +52,7 @@ export default function Layout() {
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 w-full transition-colors"
           >
             <LogOut size={18} />
-            Logout
+            退出登录
           </button>
         </div>
       </aside>

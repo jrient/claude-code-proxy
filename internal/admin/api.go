@@ -55,6 +55,11 @@ func (a *API) RegisterRoutes(r *gin.Engine) {
 		api.PUT("/apikeys/:id", a.handleUpdateAPIKey)
 		api.DELETE("/apikeys/:id", a.handleDeleteAPIKey)
 
+		// Model Mappings
+		api.GET("/providers/:id/models", a.handleListModelMappings)
+		api.POST("/providers/:id/models", a.handleCreateModelMapping)
+		api.DELETE("/providers/:id/models/:mapping_id", a.handleDeleteModelMapping)
+
 		// Stats
 		api.GET("/stats/timeseries", a.handleTimeSeries)
 		api.GET("/stats/models", a.handleModelStats)
@@ -323,6 +328,91 @@ func (a *API) handleDeleteAPIKey(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	c.JSON(http.StatusOK, gin.H{"ok": true})
+}
+
+// --- Model Mappings ---
+
+func (a *API) handleListModelMappings(c *gin.Context) {
+	providerID, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	rows, err := a.db.Query(`SELECT id, source_model, target_model FROM model_mappings WHERE provider_id = ? ORDER BY id`, providerID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	defer rows.Close()
+
+	var mappings []map[string]interface{}
+	for rows.Next() {
+		var id int64
+		var source, target string
+		rows.Scan(&id, &source, &target)
+		mappings = append(mappings, map[string]interface{}{
+			"id":     id,
+			"source": source,
+			"target": target,
+		})
+	}
+	if mappings == nil {
+		mappings = []map[string]interface{}{}
+	}
+	c.JSON(http.StatusOK, mappings)
+}
+
+func (a *API) handleCreateModelMapping(c *gin.Context) {
+	providerID, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	var req struct {
+		Source string `json:"source"`
+		Target string `json:"target"`
+	}
+	if err := c.BindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if req.Source == "" || req.Target == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "source and target are required"})
+		return
+	}
+
+	result, err := a.db.Exec(
+		`INSERT INTO model_mappings (provider_id, source_model, target_model) VALUES (?, ?, ?)
+		 ON CONFLICT(provider_id, source_model) DO UPDATE SET target_model=excluded.target_model`,
+		providerID, req.Source, req.Target,
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	id, _ := result.LastInsertId()
+	// Update in-memory router mapping
+	a.router.SetModelMapping(providerID, req.Source, req.Target)
+
+	c.JSON(http.StatusCreated, gin.H{"id": id})
+}
+
+func (a *API) handleDeleteModelMapping(c *gin.Context) {
+	providerID, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	mappingID, _ := strconv.ParseInt(c.Param("mapping_id"), 10, 64)
+
+	// Get source_model before deleting so we can remove from router
+	var source string
+	err := a.db.QueryRow(`SELECT source_model FROM model_mappings WHERE id = ? AND provider_id = ?`, mappingID, providerID).Scan(&source)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "mapping not found"})
+		return
+	}
+
+	_, err = a.db.Exec(`DELETE FROM model_mappings WHERE id = ? AND provider_id = ?`, mappingID, providerID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Remove from in-memory router mapping
+	a.router.RemoveModelMapping(providerID, source)
+
 	c.JSON(http.StatusOK, gin.H{"ok": true})
 }
 

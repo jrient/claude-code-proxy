@@ -31,6 +31,15 @@ func (r *Router) SetModelMapping(providerID int64, source, target string) {
 	val.(*sync.Map).Store(source, target)
 }
 
+// RemoveModelMapping removes a model mapping for a provider
+func (r *Router) RemoveModelMapping(providerID int64, source string) {
+	val, ok := r.modelMappings.Load(providerID)
+	if !ok {
+		return
+	}
+	val.(*sync.Map).Delete(source)
+}
+
 // GetTargetModel returns the mapped model name for a provider, or the original if no mapping
 func (r *Router) GetTargetModel(providerID int64, sourceModel string) string {
 	val, ok := r.modelMappings.Load(providerID)

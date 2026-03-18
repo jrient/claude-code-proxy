@@ -119,6 +119,18 @@ func main() {
 		}
 	}
 
+	// Load model mappings from DB
+	mappingRows, err := database.Query(`SELECT provider_id, source_model, target_model FROM model_mappings`)
+	if err == nil {
+		defer mappingRows.Close()
+		for mappingRows.Next() {
+			var providerID int64
+			var source, target string
+			mappingRows.Scan(&providerID, &source, &target)
+			rt.SetModelMapping(providerID, source, target)
+		}
+	}
+
 	// Start stats collector
 	collector.Start()
 	defer collector.Stop()

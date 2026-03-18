@@ -2,18 +2,20 @@ services:
   claude-code-proxy:
     build: .
     ports:
-      - "8080:8080"   # Proxy port
-      - "8081:8081"   # Admin panel
+      - "8086:8080"   # Proxy port
+      - "8087:8081"   # Admin panel
     volumes:
       - ./data:/app/data
       - ./config.yaml:/app/config.yaml:ro
+      - ./claude-code-proxy:/app/claude-code-proxy:ro
+      - ./cmd/server/dist:/app/cmd/server/dist:ro
     environment:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-changeme}
     restart: unless-stopped
     networks:
-      - app-network
+      - public_network
 
 networks:
-  app-network:
+  public_network:
     external: true
-    name: app-network
+    name: public_server_network

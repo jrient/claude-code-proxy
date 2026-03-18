@@ -17,7 +17,7 @@ export default function LoginPage() {
       setToken(res.token)
       navigate('/')
     } catch {
-      setError('Invalid password')
+      setError('密码错误')
     } finally {
       setLoading(false)
     }
@@ -28,14 +28,14 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
           <h1 className="text-2xl font-bold text-gray-900 text-center mb-2">Claude Code Proxy</h1>
-          <p className="text-sm text-gray-500 text-center mb-8">Enter admin password to continue</p>
+          <p className="text-sm text-gray-500 text-center mb-8">请输入管理员密码</p>
 
           <form onSubmit={handleSubmit}>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Admin Password"
+              placeholder="管理员密码"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               autoFocus
             />
@@ -45,7 +45,7 @@ export default function LoginPage() {
               disabled={loading || !password}
               className="w-full mt-4 px-4 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? '登录中...' : '登 录'}
             </button>
           </form>
         </div>
