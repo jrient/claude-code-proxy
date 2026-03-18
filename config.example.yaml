@@ -1,0 +1,30 @@
+server:
+  port: 8080
+  admin_port: 8081
+
+auth:
+  admin_password: "changeme"
+
+database:
+  path: "./data/proxy.db"
+
+# Configure your providers below
+providers:
+  # Example: OpenRouter
+  # - name: "openrouter"
+  #   type: "openai"
+  #   base_url: "https://openrouter.ai/api/v1"
+  #   api_key: "${OPENROUTER_API_KEY}"
+  #   priority: 1
+  #   weight: 10
+  #   models:
+  #     - source: "claude-sonnet-4-20250514"
+  #       target: "anthropic/claude-sonnet-4"
+
+  # Example: Native Anthropic
+  # - name: "anthropic"
+  #   type: "anthropic"
+  #   base_url: "https://api.anthropic.com"
+  #   api_key: "${ANTHROPIC_API_KEY}"
+  #   priority: 1
+  #   weight: 10

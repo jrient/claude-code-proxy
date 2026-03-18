@@ -1,0 +1,35 @@
+# Binary
+claude-code-proxy
+
+# Data
+data/
+
+# Config with secrets
+config.yaml
+
+# Go
+vendor/
+
+# Node
+web/node_modules/
+web/dist/
+
+# Embedded frontend (generated)
+cmd/server/dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Claude Code / OMC
+.claude/
+.omc/
+web/.omc/
+
+# OS
+.DS_Store
+
+# TypeScript build info
+*.tsbuildinfo
