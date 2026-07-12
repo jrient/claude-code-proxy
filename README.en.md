@@ -4,6 +4,12 @@ English | [简体中文](./README.md)
 
 A multi-upstream proxy for Claude Code focused on management and usage analytics, with a web admin panel and one-command Docker deployment.
 
+## Screenshots
+
+| Dashboard | Upstream Sources |
+|---|---|
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Sources](docs/screenshots/sources.png) |
+
 ## Features
 
 - **Multi-upstream proxy** - Supports both Anthropic-native and OpenAI-compatible API providers
