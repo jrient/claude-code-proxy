@@ -4,6 +4,12 @@
 
 专注管理和统计分析的 Claude Code 多源代理，支持 Web 管理面板，Docker 一键部署。
 
+## 界面预览
+
+| 仪表板 | API 源管理 |
+|---|---|
+| ![仪表板](docs/screenshots/dashboard.png) | ![API 源管理](docs/screenshots/sources.png) |
+
 ## 功能特性
 
 - **多源代理** - 支持 Anthropic 原生和 OpenAI 兼容格式的 API 源
