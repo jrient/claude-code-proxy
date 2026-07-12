@@ -1,3 +1,5 @@
+[English](./README.en.md) | 简体中文
+
 # Claude Code Proxy
 
 专注管理和统计分析的 Claude Code 多源代理，支持 Web 管理面板，Docker 一键部署。
